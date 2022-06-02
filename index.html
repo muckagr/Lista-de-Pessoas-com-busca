@@ -9,9 +9,30 @@
   </head>
   <body>
     <div class="container">
-      <h4>Lista de Pessoas</h4>
+      <header class="header">
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+          "
+        >
+          <h4 class="title">Lista de Pessoas</h4>
+          <button id="displayButton" onclick="getData()">Exibir Lista</button>
+        </div>
 
-      <button id="displayButton" onclick="getData()">Exibir Lista</button>
+        <br />
+
+        <small class="subtitle">Pesquisar por nome</small>
+        <input type="text" placeholder="Digite um nome" id="filter" />
+
+        <select id="select">
+          <option>Selecione um País</option>
+          <option value="Brasil">Brasil</option>
+          <option value="Itália">Itália</option>
+          <option value="Portugal">Portugal</option>
+        </select>
+      </header>
 
       <ul id="result" class="user-list"></ul>
     </div>

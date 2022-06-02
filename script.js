@@ -1,6 +1,14 @@
 const result = document.getElementById("result");
 
-//Declarar um array de nomes
+const filter = document.getElementById("filter");
+
+const select = document.getElementById("select");
+
+filter.addEventListener("input", (e) => filterData(e.target.value));
+
+select.addEventListener("change", (e) => searchByCountry(e.target.value));
+
+let listItens = [];
 
 let listNames = [
   {
@@ -28,23 +36,106 @@ let listNames = [
   },
 ];
 
-//Listar os nomes das pessoas de listNames
+let dataJson = `
+{
+  "results": [
+    {
+      "id": 1,
+      "name": "Caio Duarte",
+      "age": 34,
+      "city": "Cajamar",
+      "country": "Brasil",
+      "picture": "https://randomuser.me/api/portraits/men/57.jpg",
+      "hobby": {
+        "first": "Jogos de PC",
+        "second": "Escutar música"
+      }
+    },
+
+    {
+      "id": 2,
+      "name": "Ricardo Alves",
+      "age": 23,
+      "city": "Roma",
+      "country": "Itália",
+      "picture": "https://randomuser.me/api/portraits/men/58.jpg",
+      "hobby": {
+        "first": "Assistir Filmes",
+        "second": "Jogar Futebol"
+      }
+    },
+
+    {
+      "id": 3,
+      "name": "Sandro Alves",
+      "age": 58,
+      "city": "Lisboa",
+      "country": "Portugal",
+      "picture": "https://randomuser.me/api/portraits/men/59.jpg",
+      "hobby": {
+        "first": "Jogos de PC",
+        "second": "Escutar música"
+      }
+    }
+  ]
+}
+`;
+
+//Convertendo um Json em um Objeto JavaScript
+let response = JSON.parse(dataJson);
+
+let listResults = response.results;
+//Exibir o conteúdo da variável response no console
+console.log(response);
+
 function getData() {
   //removendo todos os itens da ul result
   result.innerHTML = "";
 
-  listNames.forEach((user) => {
+  listResults.forEach((user) => {
     const li = document.createElement("li");
 
+    listItens.push(li);
+
     li.innerHTML = `
-        <img src="${user.picture}" alt="${user.name}"
+      <img src="${user.picture}" alt="${user.name}"<br>
+      <div class="user-info">
+          <h4>${user.name}</h4>
+          <p>${user.city} | ${user.country}</p>
+          <p>${user.age} anos</p>
+      </div>
+    `;
+    //Adiciona o li com o item na lista result
+    result.appendChild(li);
+  });
+}
+
+function filterData(searchTerm) {
+  listItens.forEach((item) => {
+    if (item.innerText.toLowerCase().includes(searchTerm.toLowerCase())) {
+      item.classList.remove("hide");
+    } else {
+      item.classList.add("hide");
+    }
+  });
+}
+
+function searchByCountry(value) {
+  result.innerHTML = "";
+  console.log(value);
+
+  listResults.forEach((user) => {
+    const li = document.createElement("li");
+    if (user.country === value) {
+      li.innerHTML = `
+        <img src="${user.picture}" alt="${user.name}"<br>
         <div class="user-info">
             <h4>${user.name}</h4>
             <p>${user.city} | ${user.country}</p>
             <p>${user.age} anos</p>
         </div>
-    `;
-    //Adiciona o li com o item na lista result
+      `;
+    }
     result.appendChild(li);
   });
 }
