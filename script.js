@@ -10,32 +10,6 @@ select.addEventListener("change", (e) => searchByCountry(e.target.value));
 
 let listItens = [];
 
-let listNames = [
-  {
-    name: "Ana Santos",
-    age: 20,
-    city: "São Paulo",
-    country: "Brasil",
-    picture: "https://randomuser.me/api/portraits/women/94.jpg",
-  },
-
-  {
-    name: "Dalva Duarte",
-    age: 53,
-    city: "São Roque",
-    country: "Brasil",
-    picture: "https://randomuser.me/api/portraits/women/95.jpg",
-  },
-
-  {
-    name: "Nayra Louise",
-    age: 33,
-    city: "Cajamar",
-    country: "Brasil",
-    picture: "https://randomuser.me/api/portraits/women/96.jpg",
-  },
-];
-
 let dataJson = `
 {
   "results": [
@@ -81,31 +55,31 @@ let dataJson = `
 }
 `;
 
-//Convertendo um Json em um Objeto JavaScript
 let response = JSON.parse(dataJson);
 
-let listResults = response.results;
-//Exibir o conteúdo da variável response no console
-console.log(response);
+let listResults = [];
 
-function getData() {
-  //removendo todos os itens da ul result
+async function getData() {
+  const res = await fetch("https://randomuser.me/api/?results=30");
+
+  const { results } = await res.json();
+
   result.innerHTML = "";
 
-  listResults.forEach((user) => {
+  results.forEach((user) => {
     const li = document.createElement("li");
 
     listItens.push(li);
+    listResults.push(user);
 
     li.innerHTML = `
-      <img src="${user.picture}" alt="${user.name}"<br>
+      <img src="${user.picture.large}" alt="${user.name}"<br>
       <div class="user-info">
-          <h4>${user.name}</h4>
-          <p>${user.city} | ${user.country}</p>
-          <p>${user.age} anos</p>
+          <h4>${user.name.first}</h4>
+          <p>${user.location.city} | ${user.location.country}</p>
+          <p>${user.registered.age} anos</p>
       </div>
     `;
-    //Adiciona o li com o item na lista result
     result.appendChild(li);
   });
 }
@@ -122,19 +96,19 @@ function filterData(searchTerm) {
 
 function searchByCountry(value) {
   result.innerHTML = "";
-  console.log(value);
+
+  const li = document.createElement("li");
 
   listResults.forEach((user) => {
-    const li = document.createElement("li");
-    if (user.country === value) {
+    if (user.location.country === value) {
       li.innerHTML = `
-        <img src="${user.picture}" alt="${user.name}"<br>
-        <div class="user-info">
-            <h4>${user.name}</h4>
-            <p>${user.city} | ${user.country}</p>
-            <p>${user.age} anos</p>
-        </div>
-      `;
+      <img src="${user.picture.large}" alt="${user.name}"<br>
+      <div class="user-info">
+          <h4>${user.name.first}</h4>
+          <p>${user.location.city} | ${user.location.country}</p>
+          <p>${user.registered.age} anos</p>
+      </div>
+    `;
     }
     result.appendChild(li);
   });
